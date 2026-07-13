@@ -6,9 +6,10 @@ import in.soumyo.notifications.WhatsappNotification;
 
 public class OrderPlace {
     int amt;
-    NotificationInterface notifiaction = new SMSNotification();
+    NotificationInterface notifiaction;
 
-    OrderPlace(int amt) {
+    OrderPlace(NotificationInterface notifiaction, int amt) {
+        this.notifiaction = notifiaction;
         this.amt = amt;
     }
 
