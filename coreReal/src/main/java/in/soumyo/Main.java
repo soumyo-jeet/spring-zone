@@ -18,8 +18,6 @@ public class Main {
         // All the classes have Component annotation are now beans of the ioc container
         OrderPlace order = context.getBean(OrderPlace.class);
         order.place();
-
-        NotificationInterface notification = context.getBean(SMSNotification.class);
-        notification.sendNotification (0);
+        order.notifyUser();
     }
 }
