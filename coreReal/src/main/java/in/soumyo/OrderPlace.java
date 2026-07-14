@@ -7,22 +7,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-@Component
 public class OrderPlace {
     private int amt;
     private NotificationInterface notification;
 
-//    OrderPlace(NotificationInterface notification, int amt) {
-//        // this.notifiaction = notifiaction;
-//        this.amt = amt;+
-//    }
+    public OrderPlace(NotificationInterface notification, int amt) {
+        this.notification = notification;
+        this.amt = amt;
+    }
 
     // Automatically injected smsnotification by spring
-    @Autowired
+//    @Autowired
     // By default Primary component will be injected
-    public OrderPlace(@Qualifier("email") NotificationInterface notification) {
-        this.notification = notification;
-    }
+//    public void setNotification(NotificationInterface notification) {
+//        this.notification = notification;
+//    }
 
     void place() {
         System.out.println("Order placed for amount " + this.amt);

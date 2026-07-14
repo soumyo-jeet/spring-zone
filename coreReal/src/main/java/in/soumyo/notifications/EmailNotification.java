@@ -4,8 +4,8 @@ package in.soumyo.notifications;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-@Component
-@Qualifier("email")
+//@Component
+//@Qualifier("email")
 public class EmailNotification implements NotificationInterface{
 
     @Override
