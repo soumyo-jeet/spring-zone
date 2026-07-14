@@ -4,12 +4,13 @@ import in.soumyo.notifications.NotificationInterface;
 import in.soumyo.notifications.SMSNotification;
 import in.soumyo.notifications.WhatsappNotification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
 public class OrderPlace {
     private int amt;
-    private SMSNotification notification;
+    private NotificationInterface notification;
 
 //    OrderPlace(NotificationInterface notification, int amt) {
 //        // this.notifiaction = notifiaction;
@@ -18,7 +19,8 @@ public class OrderPlace {
 
     // Automatically injected smsnotification by spring
     @Autowired
-    public OrderPlace(SMSNotification notification) {
+    // By default Primary component will be injected
+    public OrderPlace(@Qualifier("email") NotificationInterface notification) {
         this.notification = notification;
     }
 
