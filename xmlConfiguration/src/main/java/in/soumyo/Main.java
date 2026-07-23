@@ -21,9 +21,6 @@ public class Main {
                 context.getBean("paymentService", PaymentService.class); // no conversion reqd
 
 
-
-
-
         order.placeOrder();
     }
 }
