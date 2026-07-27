@@ -1,23 +1,25 @@
 package in.soumyo.CRUDSpringBoot;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
+@Document(collection= "student") // mongodb
+// @Entity // SQL
 public class StudentEntity {
     @Id
-    private int id;
+    private String id;
 
     private String name;
     private String email;
     private int age;
     private int year;
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
