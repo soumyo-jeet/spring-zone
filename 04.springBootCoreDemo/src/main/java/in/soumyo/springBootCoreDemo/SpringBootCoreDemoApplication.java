@@ -11,8 +11,9 @@ public class SpringBootCoreDemoApplication {
 		ApplicationContext context =
 		SpringApplication.run(SpringBootCoreDemoApplication.class, args);
 
-		Order order = context.getBean(Order.class);
-		order.placeOrder();
+//		Order order = context.getBean(Order.class);
+//		order.placeOrder();
+//		order.printOrderProps();
 	}
 
 }
