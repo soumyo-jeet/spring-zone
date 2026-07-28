@@ -1,6 +1,5 @@
 package in.soumyo.CRUDSpringBoot;
 
-import jakarta.persistence.Entity;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -14,6 +13,15 @@ public class StudentEntity {
     private String email;
     private int age;
     private int year;
+    private boolean deleted;
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
 
     public String getId() {
         return id;
