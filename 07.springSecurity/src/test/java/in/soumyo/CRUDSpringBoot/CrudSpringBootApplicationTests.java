@@ -1,13 +1,44 @@
 package in.soumyo.CRUDSpringBoot;
 
+import in.soumyo.CRUDSpringBoot.config.AppConfig;
+import in.soumyo.CRUDSpringBoot.config.SecurityConfig;
+import in.soumyo.CRUDSpringBoot.service.StudentService;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 
-@SpringBootTest
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@WebMvcTest(StudentController.class)
+@Import({SecurityConfig.class, AppConfig.class})
 class CrudSpringBootApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+	@Autowired
+	private MockMvc mockMvc;
 
+	@MockBean
+	private StudentService studentService;
+
+	@Test
+	void postStudentShouldNotBeForbidden() throws Exception {
+		StudentEntity student = new StudentEntity();
+		student.setId("1");
+		student.setName("Alice");
+		student.setAge(20);
+		student.setCity("Kolkata");
+
+		when(studentService.createStudent(any(StudentEntity.class))).thenReturn(student);
+
+		mockMvc.perform(post("/api/students")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content("{\"name\":\"Alice\",\"age\":20,\"city\":\"Kolkata\"}"))
+				.andExpect(status().isCreated());
+	}
 }

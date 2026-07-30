@@ -1,7 +1,8 @@
-package in.soumyo.CRUDSpringBoot;
+package in.soumyo.CRUDSpringBoot.controller;
 
 
-import org.apache.coyote.Response;
+import in.soumyo.CRUDSpringBoot.StudentEntity;
+import in.soumyo.CRUDSpringBoot.service.StudentService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

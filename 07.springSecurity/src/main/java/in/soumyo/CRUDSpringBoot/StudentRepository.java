@@ -2,6 +2,7 @@ package in.soumyo.CRUDSpringBoot;
 
 
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -13,4 +14,6 @@ public interface StudentRepository extends MongoRepository<StudentEntity, String
     Optional<StudentEntity> findByIdAndDeletedIsFalse(String id);
 
     Optional<List<StudentEntity>> findByDeletedIsFalseAndAgeGreaterThan(int ageIsGreaterThan);
+
+    Optional<StudentEntity> findByName(String name);
 }

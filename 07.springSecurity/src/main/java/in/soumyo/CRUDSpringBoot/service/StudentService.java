@@ -1,5 +1,9 @@
-package in.soumyo.CRUDSpringBoot;
+package in.soumyo.CRUDSpringBoot.service;
 
+import in.soumyo.CRUDSpringBoot.StudentEntity;
+import in.soumyo.CRUDSpringBoot.StudentRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -8,19 +12,18 @@ import java.util.Optional;
 @Service
 public class StudentService {
     StudentRepository repository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
 
     public StudentService(StudentRepository repository) {
         this.repository = repository;
     }
 
     public StudentEntity createStudent (StudentEntity student) {
-        // bussiness logic
-
-        // save to db
-        System.out.println("Student service (in)");
         student.setDeleted(false);
+        student.setPassword(passwordEncoder.encode(student.getPassword()));
         StudentEntity createdStudent = repository.save(student);
-        System.out.println("Student service (out)");
 
         return createdStudent;
     }

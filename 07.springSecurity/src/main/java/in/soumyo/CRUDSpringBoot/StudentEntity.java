@@ -2,18 +2,42 @@ package in.soumyo.CRUDSpringBoot;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.List;
 
 @Document(collection= "student") // mongodb
 // @Entity // SQL
-public class StudentEntity {
+public class StudentEntity implements UserDetails {
     @Id
     private String id;
 
     private String name;
+    private String password;
     private String email;
     private int age;
     private int year;
     private boolean deleted;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return name;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public boolean isDeleted() {
         return deleted;
