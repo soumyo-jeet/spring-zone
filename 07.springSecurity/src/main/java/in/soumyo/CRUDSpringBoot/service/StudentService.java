@@ -3,6 +3,7 @@ package in.soumyo.CRUDSpringBoot.service;
 import in.soumyo.CRUDSpringBoot.StudentEntity;
 import in.soumyo.CRUDSpringBoot.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +24,11 @@ public class StudentService {
     public StudentEntity createStudent (StudentEntity student) {
         student.setDeleted(false);
         student.setPassword(passwordEncoder.encode(student.getPassword()));
-        StudentEntity createdStudent = repository.save(student);
 
+        Optional<StudentEntity> existedStudent = repository.findByName(student.getName());
+        if(existedStudent.isPresent()) throw new IllegalArgumentException("Username already exists");
+
+        StudentEntity createdStudent = repository.save(student);
         return createdStudent;
     }
 
@@ -33,7 +37,7 @@ public class StudentService {
         Optional<StudentEntity> student = repository.findByIdAndDeletedIsFalse(id); // may return nothing
 
         if(student.isPresent()) return student.get();
-        return null;
+        else throw new IllegalArgumentException("User not found");
     }
 
     public List<StudentEntity> getStudentByAge () {

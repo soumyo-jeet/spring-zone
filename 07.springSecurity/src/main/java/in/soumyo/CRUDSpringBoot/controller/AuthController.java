@@ -15,7 +15,8 @@ public class AuthController {
     private AuthService service;
     private StudentService studentService;
 
-    public AuthController (AuthService service) {
+    public AuthController (AuthService service, StudentService studentService) {
+        this.studentService = studentService;
         this.service = service;
     }
 

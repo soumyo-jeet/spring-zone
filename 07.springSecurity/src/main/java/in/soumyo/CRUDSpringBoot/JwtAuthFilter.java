@@ -8,6 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -16,10 +17,12 @@ import java.util.Optional;
 public class JwtAuthFilter extends OncePerRequestFilter {
     private AuthUtil authUtil;
     private StudentRepository repository;
+    private HandlerExceptionResolver handlerExceptionResolver;
 
-    public JwtAuthFilter(StudentRepository repository, AuthUtil authUtil) {
+    public JwtAuthFilter(StudentRepository repository, AuthUtil authUtil, HandlerExceptionResolver handlerExceptionResolver) {
         this.repository = repository;
         this.authUtil = authUtil;
+        this.handlerExceptionResolver = handlerExceptionResolver;
     }
 
     @Override
@@ -28,31 +31,37 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
-        logger.info("Incoming Request: " + request.getRequestURL());
+        try{
+            logger.info("Incoming Request: " + request.getRequestURL());
 
-        final String requestTokenHeader = request.getHeader("Authorization");
-        System.out.println("Header: " + requestTokenHeader);
+            final String requestTokenHeader = request.getHeader("Authorization");
+            System.out.println("Header: " + requestTokenHeader);
 
-        if(requestTokenHeader == null || !requestTokenHeader.startsWith("Bearer")) {
+            if(requestTokenHeader == null || !requestTokenHeader.startsWith("Bearer")) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+
+            String token = requestTokenHeader.split("Bearer ")[1];
+            System.out.println("Received token: " + token);
+            String username = authUtil.getUsernameFromToken(token);
+            System.out.println("Username: " + username);
+
+
+            if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                StudentEntity user = repository.findByName(username).orElseThrow();
+
+                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+                        new UsernamePasswordAuthenticationToken(user, null, null);
+
+                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+            }
+
             filterChain.doFilter(request, response);
-            return;
+        } catch (Exception e) {
+           handlerExceptionResolver.resolveException(request, response, null, e);
         }
 
-        String token = requestTokenHeader.split("Bearer ")[1];
-        System.out.println("Received token: " + token);
-        String username = authUtil.getUsernameFromToken(token);
-        System.out.println("Username: " + username);
 
-
-        if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            StudentEntity user = repository.findByName(username).orElseThrow();
-
-            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                    new UsernamePasswordAuthenticationToken(user, null, null);
-
-            SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-        }
-
-        filterChain.doFilter(request, response);
     }
 }
